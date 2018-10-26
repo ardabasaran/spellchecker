@@ -12,7 +12,6 @@ public class DefaultSpellCheckerTest {
     SpellChecker spellChecker;
     @Before
     public void setUp() throws Exception {
-        System.out.println(getClass());
         URL small = DefaultSpellCheckerTest.class.getClassLoader().getResource("small.txt");
         assert small != null;
         spellChecker = SpellCheckerFactory.createDefaultSpellChecker(small);
