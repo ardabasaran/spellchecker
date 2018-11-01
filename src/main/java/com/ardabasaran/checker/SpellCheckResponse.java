@@ -5,5 +5,5 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public interface SpellCheckResponse {
-  Map<Integer, String> getCorrectionsByScore();
+  Map<Double, String> getCorrectionsByScore();
 }

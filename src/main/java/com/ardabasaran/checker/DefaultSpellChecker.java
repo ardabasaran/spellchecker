@@ -4,15 +4,22 @@ import com.google.common.collect.Maps;
 
 import java.util.Map;
 
+/**
+ * Spellchecker that doesn't do actual checking. Corrections collection returned will always
+ * be empty.
+ */
 public class DefaultSpellChecker implements SpellChecker {
-  Map<String, Integer> wordsByFrequency;
+  Map<String, Double> wordsByInverseFrequency;
+  Map<String, Double> wordsByProbability;
 
   DefaultSpellChecker() {
-    wordsByFrequency = Maps.newHashMap();
+    wordsByInverseFrequency = Maps.newHashMap();
   }
 
-  DefaultSpellChecker(Map<String, Integer> wordsByFrequency) {
-    this.wordsByFrequency = wordsByFrequency;
+  DefaultSpellChecker(Map<String, Double> wordsByInverseFrequency,
+                      Map<String, Double> wordsByProbability) {
+    this.wordsByInverseFrequency = wordsByInverseFrequency;
+    this.wordsByProbability = wordsByProbability;
   }
 
   @Override
@@ -21,7 +28,12 @@ public class DefaultSpellChecker implements SpellChecker {
   }
 
   @Override
-  public Map<String, Integer> getWordsByFrequency() {
-    return wordsByFrequency;
+  public Map<String, Double> getWordsByInverseFrequency() {
+    return wordsByInverseFrequency;
+  }
+
+  @Override
+  public Map<String, Double> getWordsByProbability() {
+    return wordsByProbability;
   }
 }

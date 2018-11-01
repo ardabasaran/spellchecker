@@ -9,11 +9,15 @@ import java.net.URL;
 import java.util.Map;
 
 public class SpellCheckerFactory {
-  private static Map<String, Integer> wordsByFrequency;
+  private static Map<String, Double> wordsByInverseFrequency;
+  private static Map<String, Double> wordsByProbability;
   private static URL file;
 
-  private static Map<String, Integer> getFrequencyMap(URL file) {
+  private static void createMaps(URL file) {
+    wordsByInverseFrequency = Maps.newHashMap();
+    wordsByProbability = Maps.newHashMap();
     Map<String, Integer> frequencyMap = Maps.newHashMap();
+    int numWords = 0;
     try {
       BufferedReader reader = new BufferedReader(new InputStreamReader(file.openStream()));
       String line;
@@ -22,28 +26,43 @@ public class SpellCheckerFactory {
         for (String word : words) {
           Integer value = frequencyMap.getOrDefault(word, 0);
           frequencyMap.put(word, value + 1);
+          numWords += 1;
         }
       }
     } catch (IOException e) {
       System.err.println("Exception occured while trying to read file: " + file);
     }
 
-    return frequencyMap;
+    for (Map.Entry<String,Integer> entry : frequencyMap.entrySet()) {
+      double inverseFreq = -Math.log(((double) entry.getValue()) / numWords);
+      double prob = ((double) entry.getValue()) / numWords;
+      wordsByInverseFrequency.put(entry.getKey(), inverseFreq);
+      wordsByProbability.put(entry.getKey(), prob);
+    }
+
   }
 
   public static SpellChecker createDefaultSpellChecker(URL file) {
     if (!file.equals(SpellCheckerFactory.file)) {
-      wordsByFrequency = getFrequencyMap(file);
+      createMaps(file);
       SpellCheckerFactory.file = file;
     }
-    return new DefaultSpellChecker(wordsByFrequency);
+    return new DefaultSpellChecker(wordsByInverseFrequency, wordsByProbability);
   }
 
   public static SpellChecker createEditDistanceSpellChecker(URL file) {
     if (!file.equals(SpellCheckerFactory.file)) {
-      wordsByFrequency = getFrequencyMap(file);
+      createMaps(file);
       SpellCheckerFactory.file = file;
     }
-    return new EditDistanceSpellChecker(wordsByFrequency);
+    return new EditDistanceSpellChecker(wordsByInverseFrequency, wordsByProbability);
+  }
+
+  public static SpellChecker createNorvigSpellChecker(URL file) {
+    if (!file.equals(SpellCheckerFactory.file)) {
+      createMaps(file);
+      SpellCheckerFactory.file = file;
+    }
+    return new NorvigSpellChecker(wordsByInverseFrequency, wordsByProbability);
   }
 }

@@ -26,8 +26,17 @@ public class DefaultSpellCheckerTest {
   }
 
   @Test
-  public void frequencyMap() {
-    for (Map.Entry<String, Integer> entry : spellChecker.getWordsByFrequency().entrySet()) {
+  public void inverFrequencyMap() {
+    System.out.println("Inverse Frequency");
+    for (Map.Entry<String, Double> entry : spellChecker.getWordsByInverseFrequency().entrySet()) {
+      System.out.println(entry.getKey() + " : " + entry.getValue());
+    }
+  }
+
+  @Test
+  public void probabilityMap() {
+    System.out.println("Probability");
+    for (Map.Entry<String, Double> entry : spellChecker.getWordsByProbability().entrySet()) {
       System.out.println(entry.getKey() + " : " + entry.getValue());
     }
   }
