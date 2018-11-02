@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.net.URL;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.SortedMap;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -21,20 +21,6 @@ public class EditDistanceSpellCheckerTest {
 
   @Test
   public void check() {
-    SpellCheckResponse response;
-    String[] testWords = {"oen", "two", "thee", "ne", "a"};
-    for (String testWord : testWords) {
-      Map<Double, String> corrections = new TreeMap<>(spellChecker.check(testWord)
-          .getCorrectionsByScore());
-      assertTrue(corrections.size()>0);
-
-      System.out.println("-------------------");
-      System.out.println("Test word: " + testWord);
-      System.out.println("-------------------");
-      for (Map.Entry<Double, String> entry : corrections.entrySet()) {
-        System.out.println(entry.getValue() + ", " + entry.getKey());
-      }
-    }
+    SpellCheckerTestUtil.printTests(spellChecker);
   }
-
 }

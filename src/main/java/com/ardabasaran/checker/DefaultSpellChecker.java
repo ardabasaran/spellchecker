@@ -14,6 +14,7 @@ public class DefaultSpellChecker implements SpellChecker {
 
   DefaultSpellChecker() {
     wordsByInverseFrequency = Maps.newHashMap();
+    wordsByProbability = Maps.newHashMap();
   }
 
   DefaultSpellChecker(Map<String, Double> wordsByInverseFrequency,
@@ -24,7 +25,9 @@ public class DefaultSpellChecker implements SpellChecker {
 
   @Override
   public SpellCheckResponse check(String word) {
-    return ImmutableSpellCheckResponse.builder().build();
+    return ImmutableSpellCheckResponse.builder()
+        .correctionsByScore(Maps.newTreeMap())
+        .build();
   }
 
   @Override

@@ -1,9 +1,10 @@
 package com.ardabasaran.checker;
 
-import java.util.Map;
+import java.util.SortedMap;
+
 import org.immutables.value.Value;
 
 @Value.Immutable
 public interface SpellCheckResponse {
-  Map<Double, String> getCorrectionsByScore();
+  SortedMap<Double, String> getCorrectionsByScore();
 }
