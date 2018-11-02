@@ -4,7 +4,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 public interface SymSpellNode {
-  double getCost();
+  double getProbability();
 
   String getWord();
 }

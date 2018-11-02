@@ -79,10 +79,10 @@ public class SpellCheckerFactory {
 
   private static Map<String, SortedSet<SymSpellNode>> buildSymDict(Set<String> words) {
     Comparator<SymSpellNode> symSpellNodeComparator = (SymSpellNode o1, SymSpellNode o2) -> {
-      if (o1.getCost() > o2.getCost()) {
+      if (o1.getProbability() < o2.getProbability()) {
         return 1;
       }
-      else if (o1.getCost() < o2.getCost()) {
+      else if (o1.getProbability() > o2.getProbability()) {
         return -1;
       }
       else {
@@ -93,21 +93,13 @@ public class SpellCheckerFactory {
     for (String word : words) {
       // add original words
       symDict.computeIfAbsent(word, e -> new TreeSet<>(symSpellNodeComparator))
-          .add(ImmutableSymSpellNode.builder().cost(0.0).word(word).build());
+          .add(ImmutableSymSpellNode.builder().probability(1.0).word(word).build());
       // add 1 removals
-      List<String> removals = Lists.newArrayList();
-      for (int i = 0; i < word.length(); i++) {
-        String left = word.substring(0,i);
-        String right = word.substring(i);
-        //sanity check
-        if (right.length() > 0) {
-          removals.add(left + right.substring(1));
-        }
-      }
+      List<String> removals = EditDistance.getRemovals(word);
       for (String removal : removals) {
         symDict.computeIfAbsent(removal, e -> new TreeSet<>(symSpellNodeComparator))
             .add(ImmutableSymSpellNode.builder()
-                .cost(wordsByProbability.get(word))
+                .probability(wordsByProbability.get(word))
                 .word(word)
                 .build());
       }

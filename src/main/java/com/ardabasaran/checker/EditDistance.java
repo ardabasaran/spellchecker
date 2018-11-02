@@ -73,6 +73,19 @@ public class EditDistance {
     return edits;
   }
 
+  static List<String> getRemovals(String word) {
+    List<String> removals = Lists.newArrayList();
+    for (int i = 0; i < word.length(); i++) {
+      String left = word.substring(0,i);
+      String right = word.substring(i);
+      //sanity check
+      if (right.length() > 0) {
+        removals.add(left + right.substring(1));
+      }
+    }
+    return removals;
+  }
+
   private static class Split {
     String left;
     String right;

@@ -75,7 +75,7 @@
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>1.6.0</version>
                     <configuration>
-                        <mainClass>com.ardabasaran.App</mainClass>
+                        <mainClass>com.ardabasaran.SpellCheckComparison</mainClass>
                         <!--<arguments>-->
                         <!--<argument>argument1</argument>-->
                         <!--</arguments>-->

@@ -24,13 +24,13 @@ public class NorvigSpellChecker extends DefaultSpellChecker implements SpellChec
 
     // check the original
     if (wordsByInverseFrequency.containsKey(word)) {
-      corrections.put(0.0, word);
+      corrections.put(1.0, word);
     }
     // 1 edit distance away
     else {
       Set<String> allSingleAway = EditDistance.singleEdits(word);
       Set<String> candidates = getKnownWords(allSingleAway);
-      candidates.forEach(c -> addCandidate(c, corrections));
+      candidates.forEach(c -> addCandidate(c, 1.0, corrections));
       // 2 edit distance away
       if (corrections.size() < NUM_CORRECTIONS) {
         Set<String> allTwoAway = Sets.newHashSet();
@@ -40,12 +40,12 @@ public class NorvigSpellChecker extends DefaultSpellChecker implements SpellChec
         Set<String> candidatesTwoAway = getKnownWords(allTwoAway);
         candidatesTwoAway.stream()
             .filter(e -> !candidates.contains(e))
-            .forEach(c -> addCandidate(c, corrections));
+            .forEach(c -> addCandidate(c, 2.0, corrections));
       }
     }
 
     if (corrections.size() == 0) {
-      corrections.put(0.0, word);
+      corrections.put(1.0, word);
     }
 
     // return results
@@ -63,8 +63,9 @@ public class NorvigSpellChecker extends DefaultSpellChecker implements SpellChec
   }
 
   private void addCandidate(String candidate,
+                            double distance,
                             TreeMap<Double, String> correctionsByScore) {
-    double cost = wordsByProbability.get(candidate);
+    double cost = wordsByProbability.get(candidate)/distance;
     if (correctionsByScore.size() < NUM_CORRECTIONS) {
       correctionsByScore.put(cost, candidate);
     }
